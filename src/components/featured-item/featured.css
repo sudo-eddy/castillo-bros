@@ -1,0 +1,40 @@
+* {
+    color: #f2f3eb;
+}
+
+.card-title {
+    font-size: 1rem;
+}
+
+.featured-card {
+    background-color: black;
+}
+
+.featured-header {
+    width: 100%;
+    border-radius: 0%;
+    background-color: #0a69c9;
+    font-size: 1.2rem;
+    font-weight: 300;
+    border-width: 0;
+}
+
+.featured-body {
+    width: 75%;
+    margin: auto;
+    line-height: 1.3rem;
+    font-size: 0.9rem;
+}
+
+.dash-light {
+    height: 18rem;
+    width: 15rem;
+    margin: auto;
+}
+
+.warning-light {
+    stroke: #ffa500;
+    font-size: 5rem;
+    text-shadow: 0 0 5px #f2f3eb;
+    margin-left: 2rem;
+}
