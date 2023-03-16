@@ -1,5 +1,12 @@
 .custom-nav {
     background-color: #f2f3eb;
+    width: 100%;
+    font-size: medium;
+}
+
+.nav-banner {
+    margin-left: 10%;
+    margin-right: auto;
 }
 
 .company-title {
@@ -24,8 +31,21 @@
              0px 18px 23px rgba(0,0,0,0.1); 
 }
 
+.contact-number {
+    letter-spacing: 8px;
+    margin-left: 8rem;
+    font-size: large;
+    margin-right: 3rem;
+}
+
 .cta-button {
     color: #f2f3eb;
     background-color: #0a69c9;
     margin-top: 2rem;
+}
+
+.wa-icon {
+    font-size: 1.4rem;
+    fill: #0a69c9;
+    margin-left: 0.5rem;
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './header.css'
+import { BsWhatsapp } from 'react-icons/bs'
 import {
   MDBContainer,
   MDBNavbar,
@@ -14,7 +15,7 @@ import {
 import logo from '../../assets/logo-long.png'
 
 const Header = () => {
-  const [showBasic, setShowBasic, showNavSecond, setShowNavSecond] = useState(false);
+  const [showBasic, setShowBasic, showpNavSecond, setShowNavSecond] = useState(false);
 
   return (
     <header>
@@ -31,15 +32,13 @@ const Header = () => {
           <MDBIcon icon='bars' fas />
         </MDBNavbarToggler>
         <MDBCollapse navbar show={showNavSecond}>
-          <MDBNavbarNav>
-            <MDBNavbarLink active aria-current='page' href='#'>
-              Home
+          <MDBNavbarNav className='custom-nav'>
+            <MDBNavbarLink active aria-current='page' href='#about-us'>
+              About Us
             </MDBNavbarLink>
-            <MDBNavbarLink href='#'>Features</MDBNavbarLink>
-            <MDBNavbarLink href='#'>Pricing</MDBNavbarLink>
-            <MDBNavbarLink disabled href='#' tabIndex={-1} aria-disabled='true'>
-              Disabled
-            </MDBNavbarLink>
+            <MDBNavbarLink href='#services'>Services</MDBNavbarLink>
+            <MDBNavbarLink className='nav-banner' href='https://api.whatsapp.com/send?phone=16307551481' target='_blank'> Hablamos español <BsWhatsapp className='wa-icon'/></MDBNavbarLink>
+            <MDBNavbarLink href='tel:8156303149' className='contact-number'>(815) 630-3149</MDBNavbarLink>
           </MDBNavbarNav>
         </MDBCollapse>
       </MDBContainer>
@@ -55,7 +54,7 @@ const Header = () => {
               <h1 className='company-title'>Castillos Brothers Auto Service</h1>
               <h5 className='mb-3 company-subtitle'>Experts in precision emissions solutions.</h5>
               <h6 classsName='mb-3 company-subtitle'>Joliet, IL</h6>
-              <MDBBtn className='cta-button' tag="a" outline size="lg">
+              <MDBBtn className='cta-button' tag="a" outline size="lg" href='#services'>
                 Book your appointment
               </MDBBtn>
             </div>
