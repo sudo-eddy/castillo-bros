@@ -16,7 +16,7 @@ const Scheduler = () => {
             <h2 className="section-title">Schedule Your Service</h2>
             <MDBRow className="cards-row">
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2" alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">Emissions Diagnostics</MDBCardTitle>
                             <MDBCardText className="service-text">
@@ -29,7 +29,7 @@ const Scheduler = () => {
                     </MDBCard>
                 </MDBCol>
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2" alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">Mechanical Failure</MDBCardTitle>
                             <MDBCardText className="service-text">
@@ -42,7 +42,7 @@ const Scheduler = () => {
                     </MDBCard>
                 </MDBCol>
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2" alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">Electrical Failure</MDBCardTitle>
                             <MDBCardText alignment="center" className="service-text">
@@ -57,7 +57,7 @@ const Scheduler = () => {
             </MDBRow>
             <MDBRow className="cards-row">
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2" alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">Disel Engine Diagnostics</MDBCardTitle>
                             <MDBCardText className="service-text">
@@ -70,7 +70,7 @@ const Scheduler = () => {
                     </MDBCard>
                 </MDBCol>
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2" alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">Routine Maintenance</MDBCardTitle>
                             <MDBCardText className="service-text">
@@ -83,7 +83,7 @@ const Scheduler = () => {
                     </MDBCard>
                 </MDBCol>
                 <MDBCol sm='6' md='4'>
-                    <MDBCard alignment="center">
+                    <MDBCard className="mt-2"alignment="center">
                         <MDBCardBody>
                             <MDBCardTitle className="service-title">General Inspection</MDBCardTitle>
                             <MDBCardText className="service-text">
