@@ -1,0 +1,30 @@
+.scheduler-container {
+    padding-top: 3.5rem;
+    background-color: black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title {
+    text-align: center;
+    letter-spacing: 2px;
+    padding-bottom: 2rem;
+}
+.service-title {
+    color: #0a69c9;
+    font-size: 12pt;
+    text-align: center;
+}
+
+.service-text {
+    padding-top: 1rem;
+    color: black;
+    font-size: 10pt;
+    max-height: 205px;
+}
+
+.cards-row {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    margin: auto;
+}

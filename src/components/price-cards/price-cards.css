@@ -1,0 +1,22 @@
+.card-footer {
+    font-size: 10pt;
+    width: 100%;
+    text-align: center;
+}
+
+.card-subtitle {
+    font-size: 14pt;
+    color: black;
+}
+
+.card-body {
+    font-size: 11pt;
+    color: black;
+    font-weight: 100;
+}
+
+.custom-card {
+    background-image: radial-gradient(circle, #256d85, #006f97, #006faa, #006dbb, #0a69c9);
+    background-repeat: no-repeat;
+    border-radius: 0;
+}
