@@ -1,11 +1,60 @@
 import { NextResponse } from "next/server";
 
+const MAX_REQUEST_BYTES = 16_384;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type AppointmentRequest = {
+  name?: unknown;
+  phone?: unknown;
+  email?: unknown;
+  service?: unknown;
+  preferredDate?: unknown;
+  preferredTime?: unknown;
+  notes?: unknown;
+  website?: unknown;
+};
+
+const getString = (value: unknown) =>
+  typeof value === "string" ? value.trim() : "";
+
+const escapeHtml = (value: string) =>
+  value.replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      })[character] || character
+  );
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const requestText = await request.text();
 
-    const requiredFields = ["name", "service", "preferredDate"];
-    const missing = requiredFields.filter((field) => !String(body[field] || "").trim());
+    if (requestText.length > MAX_REQUEST_BYTES) {
+      return NextResponse.json({ error: "Request is too large." }, { status: 413 });
+    }
+
+    const body = JSON.parse(requestText) as AppointmentRequest;
+    const appointment = {
+      name: getString(body.name),
+      phone: getString(body.phone),
+      email: getString(body.email),
+      service: getString(body.service),
+      preferredDate: getString(body.preferredDate),
+      preferredTime: getString(body.preferredTime),
+      notes: getString(body.notes),
+    };
+
+    if (getString(body.website)) {
+      return NextResponse.json({ message: "Your appointment request was sent." });
+    }
+
+    const requiredFields = ["name", "email", "service", "preferredDate"] as const;
+    const missing = requiredFields.filter((field) => !appointment[field]);
 
     if (missing.length > 0) {
       return NextResponse.json(
@@ -14,43 +63,64 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!EMAIL_PATTERN.test(appointment.email)) {
+      return NextResponse.json(
+        { error: "Enter a valid email address." },
+        { status: 400 }
+      );
+    }
+
+    const resendApiKey = process.env.RESEND_API_KEY;
+    const appointmentsEmail = process.env.APPOINTMENTS_EMAIL;
+    const appointmentsFrom = process.env.APPOINTMENTS_FROM;
+
+    if (!resendApiKey || !appointmentsEmail || !appointmentsFrom) {
+      console.error("Appointment email environment variables are not configured.");
+      return NextResponse.json(
+        { error: "Appointment requests are temporarily unavailable. Please call the shop." },
+        { status: 503 }
+      );
+    }
+
     const emailText = [
       "New appointment request from Castillo's Auto Service website",
-      `Name: ${body.name}`,
-      `Phone: ${body.phone || "N/A"}`,
-      `Email: ${body.email || "N/A"}`,
-      `Service: ${body.service}`,
-      `Preferred Date: ${body.preferredDate}`,
-      `Preferred Time: ${body.preferredTime || "N/A"}`,
-      `Notes: ${body.notes || "No additional notes"}`,
+      `Name: ${appointment.name}`,
+      `Phone: ${appointment.phone || "N/A"}`,
+      `Email: ${appointment.email}`,
+      `Service: ${appointment.service}`,
+      `Preferred Date: ${appointment.preferredDate}`,
+      `Preferred Time: ${appointment.preferredTime || "N/A"}`,
+      `Notes: ${appointment.notes || "No additional notes"}`,
     ].join("\n");
 
-    const calendarLink = (() => {
-      const dateValue = body.preferredDate;
-      const timeValue = body.preferredTime || "09:00";
-      const start = new Date(`${dateValue}T${timeValue}:00`);
-      const end = new Date(start.getTime() + 60 * 60 * 1000);
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: appointmentsFrom,
+        to: [appointmentsEmail],
+        reply_to: appointment.email,
+        subject: `Appointment request: ${appointment.service} - ${appointment.name} - ${appointment.preferredDate}`,
+        text: emailText,
+        html: `<h1>New appointment request</h1><p><strong>Name:</strong> ${escapeHtml(appointment.name)}</p><p><strong>Phone:</strong> ${escapeHtml(appointment.phone || "N/A")}</p><p><strong>Email:</strong> ${escapeHtml(appointment.email)}</p><p><strong>Service:</strong> ${escapeHtml(appointment.service)}</p><p><strong>Preferred date:</strong> ${escapeHtml(appointment.preferredDate)}</p><p><strong>Preferred time:</strong> ${escapeHtml(appointment.preferredTime || "N/A")}</p><p><strong>Notes:</strong><br>${escapeHtml(appointment.notes || "No additional notes").replace(/\n/g, "<br>")}</p>`,
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
 
-      const formatGoogleDate = (value: Date) =>
-        value.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-
-      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-        `Castillo's Auto Service - ${body.service}`
-      )}&details=${encodeURIComponent(
-        `Appointment request for ${body.name}.\nPhone: ${body.phone || "N/A"}\nEmail: ${body.email || "N/A"}\nNotes: ${body.notes || "No additional notes"}`
-      )}&location=${encodeURIComponent("Castillo's Brothers Auto Service")}&dates=${formatGoogleDate(
-        start
-      )}/${formatGoogleDate(end)}`;
-    })();
-
-    console.log("\n--- NEW APPOINTMENT REQUEST ---");
-    console.log(emailText);
-    console.log("--- END REQUEST ---\n");
+    if (!emailResponse.ok) {
+      console.error("Resend rejected an appointment email:", emailResponse.status);
+      return NextResponse.json(
+        { error: "Unable to send your request. Please call the shop." },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json({
       message:
-        "Your appointment request has been received. The shop will confirm availability and either approve the time or suggest an alternative.",
-      googleCalendarLink: calendarLink,
+        "Your appointment request was sent. The shop will reply by email to confirm availability or suggest another time.",
     });
   } catch (error) {
     console.error("Appointment submission error:", error);

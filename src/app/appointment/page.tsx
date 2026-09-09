@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { MessageCircle, Phone } from "lucide-react";
 import SiteHeader from "../../components/layout/siteHeader";
 
@@ -21,6 +21,7 @@ const initialForm = {
   preferredDate: "",
   preferredTime: "",
   notes: "",
+  website: "",
 };
 
 export default function AppointmentPage() {
@@ -29,28 +30,7 @@ export default function AppointmentPage() {
   const [status, setStatus] = useState<{
     type: "success" | "error";
     message: string;
-    googleCalendarLink?: string;
   } | null>(null);
-
-  const googleCalendarLink = useMemo(() => {
-    if (!form.preferredDate) return "";
-
-    const dateValue = form.preferredDate;
-    const timeValue = form.preferredTime || "09:00";
-    const start = new Date(`${dateValue}T${timeValue}:00`);
-    const end = new Date(start.getTime() + 60 * 60 * 1000);
-
-    const formatGoogleDate = (value: Date) =>
-      value.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
-
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      `Castillo's Auto Service - ${form.service}`
-    )}&details=${encodeURIComponent(
-      `Appointment request for ${form.name || "customer"}.\nPhone: ${form.phone || "N/A"}\nEmail: ${form.email || "N/A"}\nNotes: ${form.notes || "No additional notes"}`
-    )}&location=${encodeURIComponent("Castillo's Brothers Auto Service")}&dates=${formatGoogleDate(
-      start
-    )}/${formatGoogleDate(end)}`;
-  }, [form]);
 
   const updateField = (field: keyof typeof initialForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -80,8 +60,7 @@ export default function AppointmentPage() {
         type: "success",
         message:
           data.message ||
-          "Your appointment request was received. We will confirm by email or suggest a new time if needed.",
-        googleCalendarLink: data.googleCalendarLink || googleCalendarLink,
+          "Your appointment request was sent. The shop will reply by email to confirm availability or suggest another time.",
       });
       setForm(initialForm);
     } catch (error) {
@@ -187,6 +166,7 @@ export default function AppointmentPage() {
                   type="email"
                   value={form.email}
                   onChange={(event) => updateField("email", event.target.value)}
+                  required
                   className="w-full rounded-xl border border-white/10 bg-[#0b1324] px-4 py-3 text-white outline-none transition focus:border-blue-500/60"
                   placeholder="you@example.com"
                 />
@@ -213,6 +193,7 @@ export default function AppointmentPage() {
                   type="date"
                   value={form.preferredDate}
                   onChange={(event) => updateField("preferredDate", event.target.value)}
+                  required
                   className="w-full rounded-xl border border-white/10 bg-[#0b1324] px-4 py-3 text-white outline-none transition focus:border-blue-500/60"
                 />
               </label>
@@ -237,9 +218,20 @@ export default function AppointmentPage() {
                   placeholder="Year, make, model, symptoms, check engine light, or anything else helpful."
                 />
               </label>
+
+              <label className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                <span>Website</span>
+                <input
+                  name="website"
+                  value={form.website}
+                  onChange={(event) => updateField("website", event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </label>
             </div>
 
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-6">
               <button
                 type="submit"
                 disabled={submitting}
@@ -247,17 +239,6 @@ export default function AppointmentPage() {
               >
                 {submitting ? "Submitting..." : "Request appointment"}
               </button>
-
-              {googleCalendarLink && (
-                <a
-                  href={googleCalendarLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.03] px-4 py-3 text-sm font-medium text-white/80 transition hover:border-blue-500/40 hover:text-white"
-                >
-                  Open Google Calendar
-                </a>
-              )}
             </div>
 
             {status && (
@@ -270,16 +251,6 @@ export default function AppointmentPage() {
                 aria-live="polite"
               >
                 <p>{status.message}</p>
-                {status.googleCalendarLink && (
-                  <a
-                    href={status.googleCalendarLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-3 inline-flex text-sm font-medium underline underline-offset-4"
-                  >
-                    Add this request to Google Calendar
-                  </a>
-                )}
               </div>
             )}
           </form>
