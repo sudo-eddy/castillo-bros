@@ -1,9 +1,0 @@
-@font-face {
-    font-family: 'Mattone-150';
-    src: local('Mattone-150'), url('./assets/fonts/Mattone-150.woff') format("woff");
-}
-
-body {
-    font-family: 'Mattone-150';
-    color: #f2f3eb;
-}
