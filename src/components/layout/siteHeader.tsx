@@ -63,7 +63,7 @@ export default function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             href={BUSINESS_PHONE_LINK}
-            className="inline-flex items-center gap-2 rounded-xl border border-blue-400/40 bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-950/40 transition hover:bg-blue-500"
+            className="hidden items-center gap-2 rounded-xl border border-blue-400/40 bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-950/40 transition hover:bg-blue-500 md:inline-flex"
           >
             <Phone className="h-4 w-4" />
             <span className="hidden sm:inline">{BUSINESS_PHONE}</span>
@@ -74,7 +74,7 @@ export default function SiteHeader() {
             target="_blank"
             rel="noreferrer"
             aria-label="Hablamos español on WhatsApp"
-            className="inline-flex items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/90 p-2.5 text-white shadow-lg shadow-emerald-950/30 transition hover:bg-emerald-500"
+            className="hidden items-center justify-center rounded-xl border border-emerald-500/40 bg-emerald-600/90 p-2.5 text-white shadow-lg shadow-emerald-950/30 transition hover:bg-emerald-500 md:inline-flex"
           >
             <MessageCircle className="h-4 w-4" />
           </Link>
