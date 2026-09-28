@@ -26,24 +26,23 @@ export default function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
 
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
+        <Link href="/" className="flex min-w-0 items-center gap-3" onClick={() => setMobileOpen(false)}>
           <Image
             src="/images/logo-v3.png"
             alt="Castillo's Auto Service Logo"
             width={320}
             height={80}
-            className="h-auto w-auto rounded-xl object-contain ring-1 ring-white/10 sm:h-16"
+            className="hidden h-auto w-auto rounded-xl object-contain ring-1 ring-white/10 sm:h-16 md:block"
             priority
           />
-          <div className="leading-tight">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white">
+          <div className="min-w-0 leading-tight">
+            <p className="truncate text-sm font-semibold uppercase tracking-[0.16em] text-white">
               Castillos Brothers
             </p>
-            <p className="text-[11px] uppercase tracking-[0.3em] text-white/55">
+            <p className="truncate text-[11px] uppercase tracking-[0.3em] text-white/55">
               Auto Service
             </p>
           </div>
-          
         </Link>
 
         {/* Desktop nav */}
@@ -60,7 +59,7 @@ export default function SiteHeader() {
         </nav>
 
         {/* Right side */}
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <Link
             href={BUSINESS_PHONE_LINK}
             className="hidden items-center gap-2 rounded-xl border border-blue-400/40 bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-950/40 transition hover:bg-blue-500 md:inline-flex"
